@@ -10,8 +10,12 @@ Tests for `seeg_utils` module.
 import pytest
 
 
-from seeg_utils import seeg_utils_fcn
+import seeg_utils as su
 
 
-def test_seeg_utils():
-    assert seeg_utils_fcn()   # this should pass
+def test_combine_electrode_files():
+    su.combine_electrode_files()
+
+
+def test_electrodes_to_fcsv():
+    su.electrodes_to_fcsv()
