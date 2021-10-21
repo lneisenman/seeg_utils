@@ -17,18 +17,20 @@ def get_directory():
 
 def read_dat_file(file_name):
     df = pd.DataFrame(columns=['name', 'x', 'y', 'z'])
-    name = os.path.basename(file_name)[0]
+    name = _electrode_name(os.path.basename(file_name))
     with open(file_name) as f:
         line = f.readline()
         i = 1
         while('info' not in line):
-            x, y, z = np.asarray(line.split(), dtype=float)
-            df.loc[i, 'name'] = f'{name}{i}'
-            df.loc[i, 'x'] = x
-            df.loc[i, 'y'] = y
-            df.loc[i, 'z'] = z
+            if line != '\n':
+                x, y, z = np.asarray(line.split(), dtype=float)
+                df.loc[i, 'name'] = f'{name}{i}'
+                df.loc[i, 'x'] = x
+                df.loc[i, 'y'] = y
+                df.loc[i, 'z'] = z
+                i += 1
+
             line = f.readline()
-            i += 1
 
     return df
 
@@ -62,9 +64,9 @@ def write_fcsv(file_name, electrodes):
 
 
 def _electrode_name(name):
-    for sym in ['-', '_', '.']:
+    for sym in ['^', '_', '-', '.']:
         if sym in name:
-            return name.split(sym)[0] + '.fcsv'
+            return name.split(sym)[0]
 
     raise ValueError(f'unable to parse name: {name}')
 
@@ -79,5 +81,6 @@ def electrodes_to_fcsv(directory=None):
             if entry.name.endswith('.dat') and entry.name != 'electrodes.dat':
                 file_name = os.path.join(directory, entry.name)
                 df = read_dat_file(file_name)
-                file_name = os.path.join(directory, _electrode_name(entry.name))
+                file_name = os.path.join(directory,
+                                         _electrode_name(entry.name)+'.fcsv')
                 write_fcsv(file_name, df)
