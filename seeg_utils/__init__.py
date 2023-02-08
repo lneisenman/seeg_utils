@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from .edf import read_edf_header, read_nk
 from .seeg_utils import combine_electrode_files, electrodes_to_fcsv
 
 __author__ = """Larry Eisenman"""
