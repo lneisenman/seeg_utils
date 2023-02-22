@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 
-def get_directory():
+def get_directory() -> str:
     root = tk.Tk()
     root.withdraw()
     directory = filedialog.askdirectory()
@@ -15,7 +15,7 @@ def get_directory():
     return directory
 
 
-def fix_trajectory(df, file_name):
+def fix_trajectory(df: pd.DataFrame, file_name: str) -> pd.DataFrame:
     fn = os.path.join(os.path.dirname(file_name), 'trajectories',
                       'traj_'+os.path.basename(file_name))
     print(fn)
@@ -42,7 +42,7 @@ def fix_trajectory(df, file_name):
     return df
 
 
-def read_dat_file(file_name):
+def read_dat_file(file_name: str) -> pd.DataFrame:
     df = pd.DataFrame(columns=['name', 'x', 'y', 'z'])
     name = _electrode_name(os.path.basename(file_name))
     with open(file_name) as f:
@@ -62,7 +62,8 @@ def read_dat_file(file_name):
     return df
 
 
-def read_electrode_file(file_name, check_trajectory=False):
+def read_electrode_file(file_name: str,
+                        check_trajectory: bool = False) -> pd.DataFrame:
     df = read_dat_file(file_name)
     if check_trajectory:
         df = fix_trajectory(df, file_name)
@@ -70,7 +71,8 @@ def read_electrode_file(file_name, check_trajectory=False):
     return df
 
 
-def combine_electrode_files(directory=None, check_trajectory=False):
+def combine_electrode_files(directory: str | None = None,
+                            check_trajectory: bool = False) -> None:
     if directory is None:
         directory = get_directory()
 
@@ -86,7 +88,7 @@ def combine_electrode_files(directory=None, check_trajectory=False):
     electrodes.to_csv(file_name, index=False, sep=' ', header=False)
 
 
-def write_fcsv(file_name, electrodes):
+def write_fcsv(file_name: str, electrodes: pd.DataFrame) -> None:
     header = '# Markups fiducial file version = 4.10\n'
     header += '# CoordinateSystem = 0\n'
     header += '# columns = id,x,y,z,ow,ox,oy,oz,vis,sel,lock,label,desc,associatedNodeID\n'                                     # noqa
@@ -98,7 +100,7 @@ def write_fcsv(file_name, electrodes):
             f.write(line)
 
 
-def _electrode_name(name):
+def _electrode_name(name: str) -> str:
     for sym in ['^', '_', '-', '.']:
         if sym in name:
             return name.split(sym)[0]
@@ -106,7 +108,7 @@ def _electrode_name(name):
     raise ValueError(f'unable to parse name: {name}')
 
 
-def electrodes_to_fcsv(directory=None):
+def electrodes_to_fcsv(directory: str | None = None) -> None:
 
     if directory is None:
         directory = get_directory()
