@@ -9,7 +9,7 @@ import mne
 import pyedflib
 
 
-def get_file_name():
+def get_file_name() -> str:
     root = tk.Tk()
     root.withdraw()
     file_name = filedialog.askopenfilename()
@@ -17,7 +17,7 @@ def get_file_name():
     return file_name
 
 
-def read_edf_header(file_name=None):
+def read_edf_header(file_name: str | None = None) -> None:
     if file_name is None:
         fn = get_file_name()
     else:
@@ -29,7 +29,8 @@ def read_edf_header(file_name=None):
     print(header['SignalHeaders'][0])
     print(header['channels'][0])
 
-def read_nk(file_name=None):
+
+def read_nk(file_name: str | None = None) -> None:
     if file_name is None:
         fn = get_file_name()
     else:
