@@ -45,7 +45,7 @@ def combine_electrode_files(directory=None):
             if entry.name.endswith('.dat') and entry.name != 'electrodes.dat':
                 file_name = os.path.join(directory, entry.name)
                 df = read_dat_file(file_name)
-                electrodes = electrodes.append(df, ignore_index=True)
+                electrodes = pd.concat([electrodes, df], ignore_index=True)
 
     file_name = os.path.join(directory, 'electrodes.dat')
     electrodes.to_csv(file_name, index=False, sep=' ', header=False)
